@@ -19,6 +19,7 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 roomConflict(constraintFactory),
                 teacherConflict(constraintFactory),
                 studentGroupConflict(constraintFactory),
+                lessonDuration(constraintFactory),
                 // Soft constraints
                 teacherRoomStability(constraintFactory),
                 teacherTimeEfficiency(constraintFactory),
@@ -32,9 +33,10 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 // Select each pair of 2 different lessons ...
                 .forEachUniquePair(Lesson.class,
                         // ... in the same timeslot ...
-                        Joiners.equal(Lesson::getTimeslot),
+                        Joiners.overlapping(Lesson::getStartTime, Lesson::getEndTime),
                         // ... in the same room ...
-                        Joiners.equal(Lesson::getRoom))
+                        Joiners.equal(Lesson::getRoom),
+                        Joiners.equal(Lesson::getDayOfWeek))
                 // ... and penalize each pair with a hard weight.
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Room conflict");
@@ -44,7 +46,8 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
         // A teacher can teach at most one lesson at the same time.
         return constraintFactory
                 .forEachUniquePair(Lesson.class,
-                        Joiners.equal(Lesson::getTimeslot),
+                        Joiners.overlapping(Lesson::getStartTime, Lesson::getEndTime),
+                        Joiners.equal(Lesson::getDayOfWeek),
                         Joiners.equal(Lesson::getTeacher))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Teacher conflict");
@@ -54,11 +57,26 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
         // A student can attend at most one lesson at the same time.
         return constraintFactory
                 .forEachUniquePair(Lesson.class,
-                        Joiners.equal(Lesson::getTimeslot),
+                        Joiners.overlapping(Lesson::getStartTime, Lesson::getEndTime),
+                        Joiners.equal(Lesson::getDayOfWeek),
                         Joiners.equal(Lesson::getStudentGroup))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Student group conflict");
     }
+
+        Constraint lessonDuration(ConstraintFactory constraintFactory) {
+                // A lesson must be scheduled in a single timeslot.
+                return constraintFactory
+                        .forEach(Lesson.class)
+                        .filter(lesson -> {
+                        Duration lessonDuration = lesson.getDuration();
+                        Duration timeslotDuration = Duration.between(lesson.getTimeslot().getStartTime(),
+                                lesson.getTimeslot().getEndTime());
+                        return !lessonDuration.equals(timeslotDuration);
+                        })
+                        .penalize(HardSoftScore.ONE_HARD)
+                        .asConstraint("Lesson duration");
+        }
 
     Constraint teacherRoomStability(ConstraintFactory constraintFactory) {
         // A teacher prefers to teach in a single room.

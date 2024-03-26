@@ -9,6 +9,10 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalTime;
+
 @PlanningEntity
 @Entity
 public class Lesson {
@@ -20,6 +24,7 @@ public class Lesson {
     private String subject;
     private String teacher;
     private String studentGroup;
+    private Duration duration; // Added field for lesson duration
 
     @PlanningVariable
     @ManyToOne
@@ -33,14 +38,15 @@ public class Lesson {
     public Lesson() {
     }
 
-    public Lesson(String subject, String teacher, String studentGroup) {
+    public Lesson(String subject, String teacher, String studentGroup, Duration duration) {
         this.subject = subject;
         this.teacher = teacher;
         this.studentGroup = studentGroup;
+        this.duration = duration;
     }
 
-    public Lesson(long id, String subject, String teacher, String studentGroup, Timeslot timeslot, Room room) {
-        this(subject, teacher, studentGroup);
+    public Lesson(long id, String subject, String teacher, String studentGroup, Duration duration, Timeslot timeslot, Room room) {
+        this(subject, teacher, studentGroup, duration);
         this.id = id;
         this.timeslot = timeslot;
         this.room = room;
@@ -71,6 +77,14 @@ public class Lesson {
         return studentGroup;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
     public Timeslot getTimeslot() {
         return timeslot;
     }
@@ -86,5 +100,27 @@ public class Lesson {
     public void setRoom(Room room) {
         this.room = room;
     }
+
+     public LocalTime getStartTime() {
+        if (this.timeslot != null) {
+            return this.timeslot.getStartTime();
+        }
+        else return LocalTime.of(0, 0);
+    }
+
+    public LocalTime getEndTime() {
+        if (this.timeslot != null) {
+            return this.timeslot.getEndTime();
+        }
+        else return LocalTime.of(0, 0);
+    }
+
+    public DayOfWeek getDayOfWeek() {
+        if (this.timeslot != null) {
+            return this.timeslot.getDayOfWeek();
+        }
+        else return DayOfWeek.MONDAY;
+    }
+
 
 }
