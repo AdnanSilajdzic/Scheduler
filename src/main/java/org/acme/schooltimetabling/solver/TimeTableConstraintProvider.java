@@ -21,6 +21,8 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 studentGroupConflict(constraintFactory),
                 lessonDuration(constraintFactory),
                 classroomTypeConflict(constraintFactory),
+                //lectures of the same subject to the same student group should be at least 2 days apart
+                seperatedLectures(constraintFactory),
                 // Soft constraints
                 teacherRoomStability(constraintFactory),
                 teacherTimeEfficiency(constraintFactory),
@@ -88,6 +90,22 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                         .penalize(HardSoftScore.ONE_HARD)
                         .asConstraint("Classroom type conflict");
         }
+
+        Constraint seperatedLectures(ConstraintFactory constraintFactory) {
+                // a lesson in the same subject to the same student group should be at least 2 days apart
+                return constraintFactory
+                        .forEachUniquePair(Lesson.class,
+                                Joiners.equal(Lesson::getSubject),
+                                Joiners.equal(Lesson::getStudentGroup),
+                                Joiners.equal(Lesson::getTeacher))
+                        .filter((lesson1, lesson2) -> {
+                                String days[] = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"};
+                                int between = Math.abs(java.util.Arrays.asList(days).indexOf(lesson1.getDayOfWeek().toString()) - java.util.Arrays.asList(days).indexOf(lesson2.getDayOfWeek().toString()));
+                                return between < 2;
+                                })
+                        .penalize(HardSoftScore.ONE_HARD)
+                        .asConstraint("Seperated lectures");
+                        }
 
     Constraint teacherRoomStability(ConstraintFactory constraintFactory) {
         // A teacher prefers to teach in a single room.

@@ -65,9 +65,8 @@ public class TimeTableSpringBootApp {
             lessonRepository.save(new Lesson("Spanish", "P. Cruz", "9th grade",Duration.ofHours(3), "amphitheater"));
             lessonRepository.save(new Lesson("Spanish", "P. Cruz", "9th grade",Duration.ofHours(3), "amphitheater"));
 
-            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "10th grade",Duration.ofHours(3), "computer lab"));
-            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "10th grade",Duration.ofHours(3), "computer lab"));
-            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "10th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "10th grade",Duration.ofHours(2), "computer lab"));
+            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "10th grade",Duration.ofHours(1), "computer lab"));
             lessonRepository.save(new Lesson("Physics", "M. Curie", "10th grade",Duration.ofHours(3), "any"));
             lessonRepository.save(new Lesson("Chemistry", "M. Curie", "10th grade",Duration.ofHours(3), "any"));
             lessonRepository.save(new Lesson("French", "M. Curie", "10th grade",Duration.ofHours(3), "amphitheater"));
