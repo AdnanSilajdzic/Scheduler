@@ -20,6 +20,7 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 teacherConflict(constraintFactory),
                 studentGroupConflict(constraintFactory),
                 lessonDuration(constraintFactory),
+                classroomTypeConflict(constraintFactory),
                 // Soft constraints
                 teacherRoomStability(constraintFactory),
                 teacherTimeEfficiency(constraintFactory),
@@ -76,6 +77,16 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                         })
                         .penalize(HardSoftScore.ONE_HARD)
                         .asConstraint("Lesson duration");
+        }
+
+        Constraint classroomTypeConflict(ConstraintFactory constraintFactory) {
+                // A lesson must be scheduled in a room of the correct type.
+                return constraintFactory
+                        .forEach(Lesson.class)
+                        .filter(lesson -> !lesson.getClassroomType().equals("any") &&
+                                !lesson.getClassroomType().equals(lesson.getRoom().getType()))
+                        .penalize(HardSoftScore.ONE_HARD)
+                        .asConstraint("Classroom type conflict");
         }
 
     Constraint teacherRoomStability(ConstraintFactory constraintFactory) {

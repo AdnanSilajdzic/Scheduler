@@ -14,17 +14,19 @@ public class Room {
     private Long id;
 
     private String name;
+    private String type;
 
     // No-arg constructor required for Hibernate
     public Room() {
     }
 
-    public Room(String name) {
+    public Room(String name, String type) {
         this.name = name;
+        this.type = type;
     }
 
-    public Room(long id, String name) {
-        this(name);
+    public Room(long id, String name, String type) {
+        this(name, type);
         this.id = id;
     }
 
@@ -43,6 +45,10 @@ public class Room {
 
     public String getName() {
         return name;
+    }
+
+    public String getType() {
+        return type;
     }
 
 }

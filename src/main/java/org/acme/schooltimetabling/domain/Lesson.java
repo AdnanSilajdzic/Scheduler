@@ -25,6 +25,7 @@ public class Lesson {
     private String teacher;
     private String studentGroup;
     private Duration duration; // Added field for lesson duration
+    private String classroomType;
 
     @PlanningVariable
     @ManyToOne
@@ -38,15 +39,16 @@ public class Lesson {
     public Lesson() {
     }
 
-    public Lesson(String subject, String teacher, String studentGroup, Duration duration) {
+    public Lesson(String subject, String teacher, String studentGroup, Duration duration, String classroomType) {
         this.subject = subject;
         this.teacher = teacher;
         this.studentGroup = studentGroup;
         this.duration = duration;
+        this.classroomType = classroomType;
     }
 
-    public Lesson(long id, String subject, String teacher, String studentGroup, Duration duration, Timeslot timeslot, Room room) {
-        this(subject, teacher, studentGroup, duration);
+    public Lesson(long id, String subject, String teacher, String studentGroup, Duration duration, String classroomType, Timeslot timeslot, Room room) {
+        this(subject, teacher, studentGroup, duration, classroomType);
         this.id = id;
         this.timeslot = timeslot;
         this.room = room;
@@ -120,6 +122,10 @@ public class Lesson {
             return this.timeslot.getDayOfWeek();
         }
         else return DayOfWeek.MONDAY;
+    }
+
+    public String getClassroomType() {
+        return classroomType;
     }
 
 

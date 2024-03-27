@@ -47,35 +47,34 @@ public class TimeTableSpringBootApp {
                 }
             }
 
-            roomRepository.save(new Room("Room A"));
-            roomRepository.save(new Room("Room B"));
-            roomRepository.save(new Room("Room C"));
-            if (demoData == DemoData.LARGE) {
-                roomRepository.save(new Room("Room D"));
-                roomRepository.save(new Room("Room E"));
-                roomRepository.save(new Room("Room F"));
-            }
-            lessonRepository.save(new Lesson("Math", "A. Turing", "9th grade",Duration.ofHours(1)));
-            lessonRepository.save(new Lesson("Math", "A. Turing", "9th grade",Duration.ofHours(1)));
-            lessonRepository.save(new Lesson("Physics", "M. Curie", "9th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Chemistry", "M. Curie", "9th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Biology", "C. Darwin", "9th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("History", "I. Jones", "9th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("English", "I. Jones", "9th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("English", "I. Jones", "9th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Spanish", "P. Cruz", "9th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Spanish", "P. Cruz", "9th grade",Duration.ofHours(3)));
+            roomRepository.save(new Room("Computer Lab 1", "computer lab"));
+            roomRepository.save(new Room("Amphitheatre", "amphitheater"));
+            roomRepository.save(new Room("Amphitheatre 2", "amphitheater"));
+            roomRepository.save(new Room("Classroom 1", "regular"));
+            roomRepository.save(new Room("Classroom 2", "regular"));
+            roomRepository.save(new Room("Classroom 3", "regular"));
 
-            lessonRepository.save(new Lesson("Math", "A. Turing", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Math", "A. Turing", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Math", "A. Turing", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Physics", "M. Curie", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Chemistry", "M. Curie", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("French", "M. Curie", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Geography", "C. Darwin", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("History", "I. Jones", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("English", "P. Cruz", "10th grade",Duration.ofHours(3)));
-            lessonRepository.save(new Lesson("Spanish", "P. Cruz", "10th grade",Duration.ofHours(3)));
+            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "9th grade",Duration.ofHours(1), "computer lab"));
+            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "9th grade",Duration.ofHours(1), "computer lab"));
+            lessonRepository.save(new Lesson("Physics", "M. Curie", "9th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("Chemistry", "M. Curie", "9th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("Biology", "C. Darwin", "9th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("History", "I. Jones", "9th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("English", "I. Jones", "9th grade",Duration.ofHours(3), "amphitheater"));
+            lessonRepository.save(new Lesson("English", "I. Jones", "9th grade",Duration.ofHours(3), "amphitheater"));
+            lessonRepository.save(new Lesson("Spanish", "P. Cruz", "9th grade",Duration.ofHours(3), "amphitheater"));
+            lessonRepository.save(new Lesson("Spanish", "P. Cruz", "9th grade",Duration.ofHours(3), "amphitheater"));
+
+            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "10th grade",Duration.ofHours(3), "computer lab"));
+            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "10th grade",Duration.ofHours(3), "computer lab"));
+            lessonRepository.save(new Lesson("Computer Science", "A. Turing", "10th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("Physics", "M. Curie", "10th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("Chemistry", "M. Curie", "10th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("French", "M. Curie", "10th grade",Duration.ofHours(3), "amphitheater"));
+            lessonRepository.save(new Lesson("Geography", "C. Darwin", "10th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("History", "I. Jones", "10th grade",Duration.ofHours(3), "any"));
+            lessonRepository.save(new Lesson("English", "P. Cruz", "10th grade",Duration.ofHours(3), "amphitheater"));
+            lessonRepository.save(new Lesson("Spanish", "P. Cruz", "10th grade",Duration.ofHours(3), "amphitheater"));
 
             Lesson lesson = lessonRepository.findAll(Sort.by("id")).iterator().next();
             lesson.setTimeslot(timeslotRepository.findAll(Sort.by("id")).iterator().next());
