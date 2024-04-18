@@ -27,7 +27,8 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 // Soft constraints
                 teacherRoomStability(constraintFactory),
                 teacherTimeEfficiency(constraintFactory),
-                studentGroupSubjectVariety(constraintFactory)
+                studentGroupSubjectVariety(constraintFactory),
+                lateClassess(constraintFactory)
         };
     }
 
@@ -176,5 +177,14 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Student group subject variety");
     }
+
+        Constraint lateClassess(ConstraintFactory constraintFactory) {
+                // A student group dislikes late lessons.
+                return constraintFactory
+                        .forEach(Lesson.class)
+                        .filter(lesson -> lesson.getTimeslot().getEndTime().getHour() > 18)
+                        .penalize(HardSoftScore.ONE_SOFT)
+                        .asConstraint("Late classes");
+        }
 
 }
