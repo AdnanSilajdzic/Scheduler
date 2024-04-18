@@ -115,11 +115,21 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                                 Joiners.equal(Lesson::getTeacher),
                                 Joiners.equal(Lesson::getDayOfWeek))
                         .filter((lesson1, lesson2) -> {
-                                Duration between = Duration.between(lesson1.getTimeslot().getStartTime(), 
-                                lesson2.getTimeslot().getEndTime());
-                                
-                                return between.compareTo(Duration.ofMinutes(180)) <= 0;
-                                }
+                                        if (lesson1.getTimeslot().getEndTime() == lesson2.getTimeslot().getStartTime()){
+
+                                        Duration between = Duration.between(lesson1.getTimeslot().getStartTime(), 
+                                        lesson2.getTimeslot().getEndTime());
+                                        
+                                        return between.compareTo(Duration.ofMinutes(180)) >= 0;
+                                        }
+                                        else if (lesson1.getTimeslot().getStartTime() == lesson2.getTimeslot().getEndTime()){
+                                        Duration between = Duration.between(lesson2.getTimeslot().getStartTime(),
+                                        lesson1.getTimeslot().getEndTime());
+
+                                        return between.compareTo(Duration.ofMinutes(180)) >= 0;
+                                        }
+                                        return false;
+                        }
                                 )
                         .penalize(HardSoftScore.ONE_HARD)
                         .asConstraint("Consecutive professor lectures");

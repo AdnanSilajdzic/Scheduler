@@ -39,7 +39,7 @@ public class TimeTableSpringBootApp {
             }
             String days[] = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"};
 
-            for (int i = 0; i<5; i++){
+            for (int i = 0; i<4; i++){
                 for(int j = 9; j<=17; j++){
                     timeslotRepository.save(new Timeslot(DayOfWeek.valueOf(days[i]), LocalTime.of(j, 0), LocalTime.of(j+1,0)));
                     timeslotRepository.save(new Timeslot(DayOfWeek.valueOf(days[i]), LocalTime.of(j, 0), LocalTime.of(j+2,0)));
