@@ -19,8 +19,10 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 roomConflict(constraintFactory),
                 teacherConflict(constraintFactory),
                 studentGroupConflict(constraintFactory),
+                mandatoryStudentGroupConflict(constraintFactory),
                 lessonDuration(constraintFactory),
                 classroomTypeConflict(constraintFactory),
+                religiousPrayerConflict(constraintFactory),
                 //lectures of the same subject to the same student group should be at least 2 days apart
                 seperatedLectures(constraintFactory),
                 consecutiveProfessorLectures(constraintFactory),
@@ -70,6 +72,24 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 .asConstraint("Student group conflict");
     }
 
+        Constraint mandatoryStudentGroupConflict(ConstraintFactory constraintFactory) {
+                // A student can attend at most one lesson at the same time.
+                return constraintFactory
+                        .forEachUniquePair(Lesson.class,
+                                Joiners.overlapping(Lesson::getStartTime, Lesson::getEndTime),
+                                Joiners.equal(Lesson::getDayOfWeek))
+                        .filter((lesson1, lesson2) -> {
+                                for (String group : lesson1.getMandatoryStudentGroups()){
+                                if (java.util.Arrays.asList(lesson2.getMandatoryStudentGroups()).contains(group)){
+                                return true;
+                                }
+                                }
+                                return false;
+                                })
+                        .penalize(HardSoftScore.ONE_HARD)
+                        .asConstraint("Mandatory student group conflict");
+        }
+
         Constraint lessonDuration(ConstraintFactory constraintFactory) {
                 // A lesson must be scheduled in a single timeslot.
                 return constraintFactory
@@ -92,6 +112,17 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                                 !lesson.getClassroomType().equals(lesson.getRoom().getType()))
                         .penalize(HardSoftScore.ONE_HARD)
                         .asConstraint("Classroom type conflict");
+        }
+
+        Constraint religiousPrayerConflict(ConstraintFactory constraintFactory) {
+                // A lesson must not be scheduled during religious prayer time.
+                return constraintFactory
+                        .forEach(Lesson.class)
+                        .filter(lesson -> lesson.getDayOfWeek().equals("FRIDAY") &&
+                                lesson.getTimeslot().getStartTime().isAfter(java.time.LocalTime.of(11, 30)) &&
+                                lesson.getTimeslot().getEndTime().isBefore(java.time.LocalTime.of(13, 30)))
+                        .penalize(HardSoftScore.ONE_HARD)
+                        .asConstraint("Religious prayer conflict");
         }
 
         Constraint seperatedLectures(ConstraintFactory constraintFactory) {

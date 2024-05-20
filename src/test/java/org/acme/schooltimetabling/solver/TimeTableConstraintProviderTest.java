@@ -50,6 +50,15 @@ class TimeTableConstraintProviderTest {
                 .penalizesBy(1);
     }
 
+    @Test
+    void MandatoryStudentGroup(){
+        Lesson firstLesson = new Lesson(1, "Subject1", "Teacher1", "Group1",Duration.ofHours(3),new String[]{},new String[]{"Group1", "Group2"}, "any",  OVERLAP1, ROOM1);
+        Lesson secondLesson = new Lesson(2, "Subject2", "Teacher2", "Group2",Duration.ofHours(3),new String[]{"Group1"},new String[]{"Group2"}, "any",  OVERLAP2, ROOM2);
+        constraintVerifier.verifyThat(TimeTableConstraintProvider::mandatoryStudentGroupConflict)
+                .given(firstLesson, secondLesson)
+                .penalizesBy(1);
+    }
+
     
 
 }
