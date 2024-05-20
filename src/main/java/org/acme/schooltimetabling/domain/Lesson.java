@@ -26,6 +26,9 @@ public class Lesson {
     private String studentGroup;
     private Duration duration; // Added field for lesson duration
     private String classroomType;
+    //array of student groups that can optionally attend the lesson
+    private String[] optionalStudentGroups;
+    private String[] mandatoryStudentGroups;
 
     @PlanningVariable
     @ManyToOne
@@ -39,16 +42,18 @@ public class Lesson {
     public Lesson() {
     }
 
-    public Lesson(String subject, String teacher, String studentGroup, Duration duration, String classroomType) {
+    public Lesson(String subject, String teacher, String studentGroup, Duration duration, String classroomType, String[] optionalStudentGroups, String[] mandatoryStudentGroups) {
         this.subject = subject;
         this.teacher = teacher;
         this.studentGroup = studentGroup;
         this.duration = duration;
         this.classroomType = classroomType;
+        this.optionalStudentGroups = optionalStudentGroups;
+        this.mandatoryStudentGroups = mandatoryStudentGroups;
     }
 
-    public Lesson(long id, String subject, String teacher, String studentGroup, Duration duration, String classroomType, Timeslot timeslot, Room room) {
-        this(subject, teacher, studentGroup, duration, classroomType);
+    public Lesson(long id, String subject, String teacher, String studentGroup, Duration duration, String[] optionalStudentGroups, String[] mandatoryStudentGroups ,String classroomType, Timeslot timeslot, Room room) {
+        this(subject, teacher, studentGroup, duration, classroomType, optionalStudentGroups, mandatoryStudentGroups);
         this.id = id;
         this.timeslot = timeslot;
         this.room = room;
@@ -97,6 +102,22 @@ public class Lesson {
 
     public Room getRoom() {
         return room;
+    }
+
+    public String[] getOptionalStudentGroups() {
+        return optionalStudentGroups;
+    }
+
+    public void setOptionalStudentGroups(String[] optionalStudentGroups) {
+        this.optionalStudentGroups = optionalStudentGroups;
+    }
+
+    public String[] getMandatoryStudentGroups() {
+        return mandatoryStudentGroups;
+    }
+
+    public void setMandatoryStudentGroups(String[] mandatoryStudentGroups) {
+        this.mandatoryStudentGroups = mandatoryStudentGroups;
     }
 
     public void setRoom(Room room) {

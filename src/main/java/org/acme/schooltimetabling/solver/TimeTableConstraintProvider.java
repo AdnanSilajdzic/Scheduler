@@ -28,7 +28,8 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 teacherRoomStability(constraintFactory),
                 teacherTimeEfficiency(constraintFactory),
                 studentGroupSubjectVariety(constraintFactory),
-                lateClassess(constraintFactory)
+                lateClassess(constraintFactory),
+                electiveLessons(constraintFactory)
         };
     }
 
@@ -185,6 +186,26 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                         .filter(lesson -> lesson.getTimeslot().getEndTime().getHour() > 18)
                         .penalize(HardSoftScore.ONE_SOFT)
                         .asConstraint("Late classes");
+        }
+
+        Constraint electiveLessons(ConstraintFactory constraintFactory) {
+                // a lesson that is elective should not be scheduled in the same timeslot as a mandatory lesson for the same student group
+                return constraintFactory
+                        .forEachUniquePair(Lesson.class,
+                                Joiners.overlapping(Lesson::getStartTime, Lesson::getEndTime),
+                                Joiners.equal(Lesson::getDayOfWeek))
+                        .filter((lesson1, lesson2) -> {
+                                if (lesson1.getOptionalStudentGroups().length > 0){
+                                for (String group : lesson1.getOptionalStudentGroups()){
+                                if (java.util.Arrays.asList(lesson2.getMandatoryStudentGroups()).contains(group)){
+                                return true;
+                                }
+                                }
+                                }
+                                return false;
+                                })
+                        .penalize(HardSoftScore.ONE_SOFT)
+                        .asConstraint("Elective lessons");
         }
 
 }

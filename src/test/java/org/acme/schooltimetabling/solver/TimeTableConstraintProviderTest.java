@@ -24,6 +24,10 @@ class TimeTableConstraintProviderTest {
     private static final Timeslot TIMESLOT3 = new Timeslot(3, DayOfWeek.TUESDAY, LocalTime.NOON.plusHours(1));
     private static final Timeslot TIMESLOT4 = new Timeslot(4, DayOfWeek.TUESDAY, LocalTime.NOON.plusHours(3));
     private static final Timeslot LATE = new Timeslot(DayOfWeek.TUESDAY,LocalTime.of(16, 0), LocalTime.of(19,0));
+    private static final Timeslot OVERLAP1 = new Timeslot(DayOfWeek.TUESDAY,LocalTime.of(13, 0), LocalTime.of(15,0));
+    private static final Timeslot OVERLAP2 = new Timeslot(DayOfWeek.TUESDAY,LocalTime.of(14, 0), LocalTime.of(16,0));
+
+
 
 
     @Autowired
@@ -31,9 +35,18 @@ class TimeTableConstraintProviderTest {
 
     @Test
     void lateLectures() {
-        Lesson firstLesson = new Lesson(1, "Subject1", "Teacher1", "Group1",Duration.ofHours(3), "any", LATE, ROOM1);
+        Lesson firstLesson = new Lesson(1, "Subject1", "Teacher1", "Group1",Duration.ofHours(3),new String[]{},new String[]{}, "any",  LATE, ROOM1);
         constraintVerifier.verifyThat(TimeTableConstraintProvider::lateClassess)
                 .given(firstLesson)
+                .penalizesBy(1);
+    }
+
+    @Test
+    void ElectiveLectures(){
+        Lesson firstLesson = new Lesson(1, "Subject1", "Teacher1", "Group1",Duration.ofHours(3),new String[]{"Group2"},new String[]{"Group1"}, "any",  OVERLAP1, ROOM1);
+        Lesson secondLesson = new Lesson(2, "Subject2", "Teacher2", "Group2",Duration.ofHours(3),new String[]{"Group1"},new String[]{"Group2"}, "any",  OVERLAP2, ROOM2);
+        constraintVerifier.verifyThat(TimeTableConstraintProvider::electiveLessons)
+                .given(firstLesson, secondLesson)
                 .penalizesBy(1);
     }
 
