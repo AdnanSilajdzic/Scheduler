@@ -51,7 +51,7 @@ public class Lesson {
         this.optionalStudentGroups = optionalStudentGroups;
         this.mandatoryStudentGroups = mandatoryStudentGroups;
     }
-
+    
     public Lesson(long id, String subject, String teacher, String studentGroup, Duration duration, String[] optionalStudentGroups, String[] mandatoryStudentGroups ,String classroomType, Timeslot timeslot, Room room) {
         this(subject, teacher, studentGroup, duration, classroomType, optionalStudentGroups, mandatoryStudentGroups);
         this.id = id;
