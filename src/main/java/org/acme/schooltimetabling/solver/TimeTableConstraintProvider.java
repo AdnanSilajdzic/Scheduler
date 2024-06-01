@@ -23,15 +23,18 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                 lessonDuration(constraintFactory),
                 classroomTypeConflict(constraintFactory),
                 religiousPrayerConflict(constraintFactory),
-                //lectures of the same subject to the same student group should be at least 2 days apart
-                seperatedLectures(constraintFactory),
+                maxTeachingHoursPerDay(constraintFactory),
+                maxStudentHoursPerDay(constraintFactory),
+                seperatedLectures(constraintFactory),//lectures of the same subject to the same student group should be at least 2 days apart
                 consecutiveProfessorLectures(constraintFactory),
+                consecutiveStudentGroupLectures(constraintFactory),
                 // Soft constraints
                 teacherRoomStability(constraintFactory),
                 teacherTimeEfficiency(constraintFactory),
                 studentGroupSubjectVariety(constraintFactory),
                 lateClassess(constraintFactory),
-                electiveLessons(constraintFactory)
+                electiveLessons(constraintFactory),
+                minimizeGapsBetweenLectures(constraintFactory)
         };
     }
 
@@ -125,6 +128,42 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                         .asConstraint("Religious prayer conflict");
         }
 
+        Constraint maxTeachingHoursPerDay(ConstraintFactory constraintFactory) {
+                // A teacher should not teach more than 6 hours in a day.
+                return constraintFactory
+                        .forEachUniquePair(Lesson.class,
+                                Joiners.equal(Lesson::getTeacher),
+                                Joiners.equal(Lesson::getDayOfWeek))
+                        .filter((lesson1, lesson2) -> {
+                                Duration between = Duration.between(lesson1.getTimeslot().getStartTime(),
+                                        lesson2.getTimeslot().getEndTime());
+                                Duration between2 = Duration.between(lesson2.getTimeslot().getStartTime(),
+                                        lesson1.getTimeslot().getEndTime());
+                                Duration larger = between.compareTo(between2) > 0 ? between : between2;
+                                return larger.compareTo(Duration.ofMinutes(360)) > 0;
+                                })
+                        .penalize(HardSoftScore.ONE_HARD)
+                        .asConstraint("Max teaching hours per day");
+        }
+
+        Constraint maxStudentHoursPerDay(ConstraintFactory constraintFactory) {
+                // A student should not have more than 6 hours of lessons in a day.
+                return constraintFactory
+                        .forEachUniquePair(Lesson.class,
+                                Joiners.equal(Lesson::getStudentGroup),
+                                Joiners.equal(Lesson::getDayOfWeek))
+                        .filter((lesson1, lesson2) -> {
+                                Duration between = Duration.between(lesson1.getTimeslot().getStartTime(),
+                                        lesson2.getTimeslot().getEndTime());
+                                Duration between2 = Duration.between(lesson2.getTimeslot().getStartTime(),
+                                        lesson1.getTimeslot().getEndTime());
+                                Duration larger = between.compareTo(between2) > 0 ? between : between2;
+                                return larger.compareTo(Duration.ofMinutes(360)) > 0;
+                                })
+                        .penalize(HardSoftScore.ONE_HARD)
+                        .asConstraint("Max student hours per day");
+        }
+
         Constraint seperatedLectures(ConstraintFactory constraintFactory) {
                 // a lesson in the same subject to the same student group should be at least 2 days apart
                 return constraintFactory
@@ -166,6 +205,33 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                                 )
                         .penalize(HardSoftScore.ONE_HARD)
                         .asConstraint("Consecutive professor lectures");
+                        }
+
+        Constraint consecutiveStudentGroupLectures(ConstraintFactory constraintFactory) {
+                // a student group should not have more than 3 consecutive hours of lectures
+                return constraintFactory
+                        .forEachUniquePair(Lesson.class,
+                                Joiners.equal(Lesson::getStudentGroup),
+                                Joiners.equal(Lesson::getDayOfWeek))
+                        .filter((lesson1, lesson2) -> {
+                                        if (lesson1.getTimeslot().getEndTime() == lesson2.getTimeslot().getStartTime()){
+
+                                        Duration between = Duration.between(lesson1.getTimeslot().getStartTime(), 
+                                        lesson2.getTimeslot().getEndTime());
+                                        
+                                        return between.compareTo(Duration.ofMinutes(180)) >= 0;
+                                        }
+                                        else if (lesson1.getTimeslot().getStartTime() == lesson2.getTimeslot().getEndTime()){
+                                        Duration between = Duration.between(lesson2.getTimeslot().getStartTime(),
+                                        lesson1.getTimeslot().getEndTime());
+
+                                        return between.compareTo(Duration.ofMinutes(180)) >= 0;
+                                        }
+                                        return false;
+                        }
+                                )
+                        .penalize(HardSoftScore.ONE_HARD)
+                        .asConstraint("Consecutive student group lectures");
                         }
 
     Constraint teacherRoomStability(ConstraintFactory constraintFactory) {
@@ -238,5 +304,24 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                         .penalize(HardSoftScore.ONE_SOFT)
                         .asConstraint("Elective lessons");
         }
+
+        Constraint minimizeGapsBetweenLectures(ConstraintFactory constraintFactory) {
+                // a student group should not have more than 2 gaps between lectures
+                return constraintFactory
+                        .forEachUniquePair(Lesson.class,
+                                Joiners.equal(Lesson::getStudentGroup),
+                                Joiners.equal(Lesson::getDayOfWeek))
+                        .filter((lesson1, lesson2) -> {
+                                        Duration between = Duration.between(lesson1.getTimeslot().getEndTime(),
+                                        lesson2.getTimeslot().getStartTime());
+                                        Duration between2 = Duration.between(lesson2.getTimeslot().getEndTime(),
+                                        lesson1.getTimeslot().getStartTime());
+                                        Duration larger = between.compareTo(between2) > 0 ? between : between2;
+                                        return larger.compareTo(Duration.ofMinutes(120)) >= 0;
+                        }
+                                )
+                        .penalize(HardSoftScore.ONE_SOFT)
+                        .asConstraint("Minimize gaps between lectures");
+                        }
 
 }
