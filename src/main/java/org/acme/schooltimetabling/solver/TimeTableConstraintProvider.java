@@ -140,7 +140,7 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                                 Duration between2 = Duration.between(lesson2.getTimeslot().getStartTime(),
                                         lesson1.getTimeslot().getEndTime());
                                 Duration larger = between.compareTo(between2) > 0 ? between : between2;
-                                return larger.compareTo(Duration.ofMinutes(360)) > 0;
+                                return larger.compareTo(Duration.ofMinutes(420)) > 0;
                                 })
                         .penalize(HardSoftScore.ONE_HARD)
                         .asConstraint("Max teaching hours per day");
@@ -158,7 +158,7 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                                 Duration between2 = Duration.between(lesson2.getTimeslot().getStartTime(),
                                         lesson1.getTimeslot().getEndTime());
                                 Duration larger = between.compareTo(between2) > 0 ? between : between2;
-                                return larger.compareTo(Duration.ofMinutes(360)) > 0;
+                                return larger.compareTo(Duration.ofMinutes(420)) > 0;
                                 })
                         .penalize(HardSoftScore.ONE_HARD)
                         .asConstraint("Max student hours per day");
