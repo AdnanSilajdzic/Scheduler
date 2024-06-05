@@ -1,5 +1,6 @@
 package org.acme.schooltimetabling.solver;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
@@ -118,15 +119,15 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
         }
 
         Constraint religiousPrayerConflict(ConstraintFactory constraintFactory) {
-                // A lesson must not be scheduled during religious prayer time.
-                return constraintFactory
-                        .forEach(Lesson.class)
-                        .filter(lesson -> lesson.getDayOfWeek().equals("FRIDAY") &&
-                                lesson.getTimeslot().getStartTime().isAfter(java.time.LocalTime.of(11, 30)) &&
-                                lesson.getTimeslot().getEndTime().isBefore(java.time.LocalTime.of(13, 30)))
-                        .penalize(HardSoftScore.ONE_HARD)
-                        .asConstraint("Religious prayer conflict");
-        }
+        // A lesson must not be scheduled during religious prayer time.
+        return constraintFactory
+            .forEach(Lesson.class)
+            .filter(lesson -> lesson.getDayOfWeek() == DayOfWeek.FRIDAY &&
+                lesson.getTimeslot().getStartTime().isAfter(java.time.LocalTime.of(11, 30)) &&
+                lesson.getTimeslot().getEndTime().isBefore(java.time.LocalTime.of(13, 30)))
+            .penalize(HardSoftScore.ONE_HARD)
+            .asConstraint("Religious prayer conflict");
+    }
 
         Constraint maxTeachingHoursPerDay(ConstraintFactory constraintFactory) {
                 // A teacher should not teach more than 6 hours in a day.

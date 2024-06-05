@@ -19,9 +19,13 @@ class TimeTableConstraintProviderTest {
 
     private static final Room ROOM1 = new Room(1, "Room1", "computer lab");
     private static final Room ROOM2 = new Room(2, "Room2", "regular");
+    @SuppressWarnings("unused")
     private static final Timeslot TIMESLOT1 = new Timeslot(1, DayOfWeek.MONDAY, LocalTime.NOON);
+    @SuppressWarnings("unused")
     private static final Timeslot TIMESLOT2 = new Timeslot(2, DayOfWeek.TUESDAY, LocalTime.NOON);
+    @SuppressWarnings("unused")
     private static final Timeslot TIMESLOT3 = new Timeslot(3, DayOfWeek.TUESDAY, LocalTime.NOON.plusHours(1));
+    @SuppressWarnings("unused")
     private static final Timeslot TIMESLOT4 = new Timeslot(4, DayOfWeek.TUESDAY, LocalTime.NOON.plusHours(3));
     private static final Timeslot LATE = new Timeslot(DayOfWeek.TUESDAY,LocalTime.of(16, 0), LocalTime.of(19,0));
     private static final Timeslot OVERLAP1 = new Timeslot(DayOfWeek.TUESDAY,LocalTime.of(13, 0), LocalTime.of(15,0));
