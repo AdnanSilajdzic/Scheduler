@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.acme.schooltimetabling.solver.LessonDifficultyComparator;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
@@ -13,7 +14,7 @@ import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
 
-@PlanningEntity
+@PlanningEntity(difficultyComparatorClass = LessonDifficultyComparator.class)
 @Entity
 public class Lesson {
 
@@ -51,7 +52,7 @@ public class Lesson {
         this.optionalStudentGroups = optionalStudentGroups;
         this.mandatoryStudentGroups = mandatoryStudentGroups;
     }
-    
+
     public Lesson(long id, String subject, String teacher, String studentGroup, Duration duration, String[] optionalStudentGroups, String[] mandatoryStudentGroups ,String classroomType, Timeslot timeslot, Room room) {
         this(subject, teacher, studentGroup, duration, classroomType, optionalStudentGroups, mandatoryStudentGroups);
         this.id = id;
@@ -72,16 +73,32 @@ public class Lesson {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getSubject() {
         return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getTeacher() {
         return teacher;
     }
 
+    public void setTeacher(String teacher) {
+        this.teacher = teacher;
+    }
+
     public String getStudentGroup() {
         return studentGroup;
+    }
+
+    public void setStudentGroup(String studentGroup) {
+        this.studentGroup = studentGroup;
     }
 
     public Duration getDuration() {
@@ -104,6 +121,10 @@ public class Lesson {
         return room;
     }
 
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     public String[] getOptionalStudentGroups() {
         return optionalStudentGroups;
     }
@@ -120,34 +141,35 @@ public class Lesson {
         this.mandatoryStudentGroups = mandatoryStudentGroups;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public String getClassroomType() {
+        return classroomType;
     }
 
-     public LocalTime getStartTime() {
+    public void setClassroomType(String classroomType) {
+        this.classroomType = classroomType;
+    }
+
+    public LocalTime getStartTime() {
         if (this.timeslot != null) {
             return this.timeslot.getStartTime();
+        } else {
+            return LocalTime.of(0, 0);
         }
-        else return LocalTime.of(0, 0);
     }
 
     public LocalTime getEndTime() {
         if (this.timeslot != null) {
             return this.timeslot.getEndTime();
+        } else {
+            return LocalTime.of(0, 0);
         }
-        else return LocalTime.of(0, 0);
     }
 
     public DayOfWeek getDayOfWeek() {
         if (this.timeslot != null) {
             return this.timeslot.getDayOfWeek();
+        } else {
+            return DayOfWeek.MONDAY;
         }
-        else return DayOfWeek.MONDAY;
     }
-
-    public String getClassroomType() {
-        return classroomType;
-    }
-
-
 }

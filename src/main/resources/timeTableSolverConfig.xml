@@ -1,0 +1,24 @@
+<solver>
+    <solutionClass>org.acme.schooltimetabling.domain.TimeTable</solutionClass>
+    <entityClass>org.acme.schooltimetabling.domain.Lesson</entityClass>
+
+    <scoreDirectorFactory>
+        <constraintProviderClass>org.acme.schooltimetabling.solver.TimeTableConstraintProvider</constraintProviderClass>
+    </scoreDirectorFactory>
+
+    <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+    </constructionHeuristic>
+
+    <localSearch>
+        <localSearchType>TABU_SEARCH</localSearchType>
+        <termination>
+            <secondsSpentLimit>300</secondsSpentLimit>
+        </termination>
+    </localSearch>
+
+    <termination>
+        <secondsSpentLimit>600</secondsSpentLimit>
+        <bestScoreLimit>0hard/0soft</bestScoreLimit>
+    </termination>
+</solver>
