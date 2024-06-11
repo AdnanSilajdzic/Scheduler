@@ -18,17 +18,17 @@ Ensure you have the following installed on your system:
 === Clone the Repository
 
 If you haven't cloned the repository yet, do so by running:
-
+```
 git clone <repository-url>
 cd <repository-directory>
-
+```
 
 === Build the Project
 
 To build the project, navigate to the project directory and run:
-
+```
 mvn clean install
-
+```
 This command will compile the code, run the tests, and package the application.
 
 === Run the Application
