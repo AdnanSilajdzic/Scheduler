@@ -9,6 +9,7 @@ This project is a school timetabling application that uses OptaPlanner to optimi
 === Prerequisites
 
 Ensure you have the following installed on your system:
+
 * Java Development Kit (JDK) 11 or higher
 * Maven 3.6.0 or higher
 * Git (optional, for cloning the repository)
@@ -38,6 +39,56 @@ run the TImeTableSpringBootApp.java file using your IDE or through the terminal.
 A server will be open on http://localhost:8080/
 From there you may use the application through the browser or using the REST API 
 
+== Configuring the Solver
 
+You can configure the solver to use different algorithms or different conditions through the `application.properties` and `solverConfig.xml` files located in the `src/main/resources` directory.
+The `application.properties` file contains additional instructions for configuration.
+
+=== Example Configuration for solverConfig.xml
+
+Below is an example configuration that uses First Fit for the construction heuristic and Tabu Search for local search:
+
+```xml
+<solver>
+    <solutionClass>org.acme.schooltimetabling.domain.TimeTable</solutionClass>
+    <entityClass>org.acme.schooltimetabling.domain.Lesson</entityClass>
+
+    <scoreDirectorFactory>
+        <constraintProviderClass>org.acme.schooltimetabling.solver.TimeTableConstraintProvider</constraintProviderClass>
+    </scoreDirectorFactory>
+
+    <!-- Configuration for Construction Heuristic -->
+    <constructionHeuristic>
+        <!-- Using First Fit -->
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+    </constructionHeuristic>
+
+    <!-- Configuration for Local Search -->
+    <localSearch>
+        <!-- Using Tabu Search -->
+        <localSearchType>TABU_SEARCH</localSearchType>
+        <!-- Termination condition for Local Search -->
+        <termination>
+            <!-- Limiting search time to 300 seconds -->
+            <secondsSpentLimit>300</secondsSpentLimit>
+        </termination>
+    </localSearch>
+
+    <!-- Termination condition for Solver -->
+    <termination>
+        <!-- Total time limit for solving (including both construction and local search) -->
+        <secondsSpentLimit>600</secondsSpentLimit>
+        <!-- Best score limit to stop when a score of 0 is reached -->
+        <bestScoreLimit>0hard/0soft</bestScoreLimit>
+    </termination>
+</solver> 
+```
+
+== Additional Information
+
+For more information on configuring OptaPlanner and writing constraints, refer to the official OptaPlanner documentation:
+https://www.optaplanner.org/docs/optaplanner/latest/optaplanner-docs.html
+
+If you encounter any issues or have questions, feel free to open an issue in the repository or contact the maintainers.
 
 
