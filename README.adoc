@@ -1,3 +1,75 @@
-= School Timetabling 
+= School Timetabling Project
 
-TODO: write documentation
+== Project Overview
+
+This project is a school timetabling application that uses OptaPlanner to optimize the scheduling of lessons. The application is built using Spring Boot and leverages OptaPlanner's capabilities to solve complex scheduling problems efficiently.
+
+== Getting Started
+
+=== Prerequisites
+
+Ensure you have the following installed on your system:
+* Java Development Kit (JDK) 11 or higher
+* Maven 3.6.0 or higher
+* Git (optional, for cloning the repository)
+
+=== Clone the Repository
+
+If you haven't cloned the repository yet, do so by running:
+git clone https://github.com/AdnanSilajdzic/Scheduler
+cd Scheduler
+
+=== Build the Project
+
+To build the project, navigate to the project directory and run:
+
+mvn clean install
+
+Sure, here's a detailed README.adoc file for your project:
+
+adoc
+
+= School Timetabling Project
+
+== Project Overview
+
+This project is a school timetabling application that uses OptaPlanner to optimize the scheduling of lessons. The application is built using Spring Boot and leverages OptaPlanner's capabilities to solve complex scheduling problems efficiently.
+
+== Getting Started
+
+=== Prerequisites
+
+Ensure you have the following installed on your system:
+* Java Development Kit (JDK) 11 or higher
+* Maven 3.6.0 or higher
+* Git (optional, for cloning the repository)
+* An IDE such as IntelliJ IDEA, VSCode or Eclipse
+=== Clone the Repository
+
+If you haven't cloned the repository yet, do so by running:
+
+git clone <repository-url>
+cd <repository-directory>
+
+css
+
+
+=== Build the Project
+
+To build the project, navigate to the project directory and run:
+
+mvn clean install
+
+This command will compile the code, run the tests, and package the application.
+
+=== Run the Application
+
+After building the project, you can run the application by navigating to 
+src/main/java/org/acme/schooltimetabling/
+
+run the TImeTableSpringBootApp.java file using your IDE or through the terminal.
+A server will be open on http://localhost:8080/
+From there you may use the application through the browser or using the REST API through other means
+
+
+
